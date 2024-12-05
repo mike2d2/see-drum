@@ -62,5 +62,5 @@ def test_folder(folder):
             else:
                 print(f"The audio file {file} is classified as NOT DRUMS.")
 
-test_folder('./test_drum_audio')
-test_folder('./test_not_drum_audio')
+test_folder('./real_audio_testing/test_drum_audio')
+test_folder('./real_audio_testing/test_not_drum_audio')
