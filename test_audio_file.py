@@ -1,3 +1,4 @@
+import os
 from pydub import AudioSegment
 import torch
 from transformers import Wav2Vec2Processor, Wav2Vec2Model
@@ -40,19 +41,26 @@ processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-large-960h")
 feature_extractor = Wav2Vec2Model.from_pretrained("facebook/wav2vec2-large-960h")
 
 # Preprocess the audio file
-audio_file_path = "./test_audio/song_1.mp3"
-logits = preprocess_audio(audio_file_path, processor, feature_extractor)  # Shape: (sequence_length, input_dim)
+def test_folder(folder):
+    for root, _, files in os.walk(folder):
 
-# Reshape logits for batch processing
-logits = logits.unsqueeze(0)  # Add batch dimension: Shape: (1, sequence_length, input_dim)
+        for file in files:
+            # if file.endswith(".wav"):
+            logits = preprocess_audio(os.path.join(root,file), processor, feature_extractor)  # Shape: (sequence_length, input_dim)
 
-# Perform inference
-with torch.no_grad():
-    output = classifier(logits).squeeze()  # Output is the probability of being a drum audio
+            # Reshape logits for batch processing
+            logits = logits.unsqueeze(0)  # Add batch dimension: Shape: (1, sequence_length, input_dim)
 
-# Interpret the result
-print(f"Prediction: {output.item():.4f}")
-if output.item() > 0.5:
-    print("The audio file is classified as DRUMS.")
-else:
-    print("The audio file is classified as NOT DRUMS.")
+            # Perform inference
+            with torch.no_grad():
+                output = classifier(logits).squeeze()  # Output is the probability of being a drum audio
+
+            # Interpret the result
+            print(f"Prediction: {output.item():.4f}")
+            if output.item() > 0.5:
+                print(f"The audio file {file} is classified as DRUMS.")
+            else:
+                print(f"The audio file {file} is classified as NOT DRUMS.")
+
+test_folder('./test_drum_audio')
+test_folder('./test_not_drum_audio')

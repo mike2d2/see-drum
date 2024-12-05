@@ -64,7 +64,7 @@ def process_datasets(segment_duration=5, num_segments=5, split="train"):
 
     count = 0
     for root, _, files in tqdm(os.walk(data_path)):
-        if count > 5:
+        if count > 300:
             break
 
         for file in files:
@@ -203,9 +203,9 @@ def train_and_test_model():
 
 
 if __name__ == "__main__":
-    # print("Processing training data...")
-    # process_datasets(split="train")
-    # print("Processing testing data...")
-    # process_datasets(split="test")
+    print("Processing training data...")
+    process_datasets(split="train")
+    print("Processing testing data...")
+    process_datasets(split="test")
     print("Training and testing model...")
     train_and_test_model()
